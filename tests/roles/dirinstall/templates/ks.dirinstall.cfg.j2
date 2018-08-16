@@ -1,0 +1,16 @@
+url --url={{ installation_repo }}
+lang en_US.UTF-8
+keyboard --vckeymap=us --xlayouts='us'
+rootpw --plaintext redhat
+#firstboot --reconfig
+timezone --utc Europe/Prague
+
+#bootloader --location=mbr --boot-drive=vda --driveorder=vda
+#clearpart --all --drives=vda
+#ignoredisk --only-use=vda
+#autopart
+
+shutdown
+
+%packages
+%end

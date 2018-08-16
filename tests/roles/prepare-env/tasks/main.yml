@@ -1,0 +1,6 @@
+---
+- name: Prepare testing environment
+  dnf:
+    name:
+      - anaconda
+    state: latest

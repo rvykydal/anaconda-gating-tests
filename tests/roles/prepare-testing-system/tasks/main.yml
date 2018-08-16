@@ -1,0 +1,19 @@
+---
+- name: Install testing system packages
+  dnf:
+    name:
+      - ansible
+      - python2-dnf
+      - libselinux-python
+      - standard-test-roles
+    state: latest
+
+- name: Create empty artifacts directory
+  file:
+    path: "{{ artifacts }}/"
+    state: "{{ item }}"
+    mode: 0755
+  with_items:
+    - absent
+    - directory
+

@@ -1,0 +1,60 @@
+---
+- name: Install vnc install dependencies
+  dnf:
+    name:
+      - metacity
+    state: latest
+  when: method == "--vnc"
+
+- name: Turn off selinux
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: Create target directory
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Copy installation kickstart
+  template:
+    src: ks.dirinstall.cfg.j2
+    dest: "{{ kickstart_dest }}"
+    mode: 0755
+
+- name: Clean target directory
+  file:
+    path: "{{ install_dir }}/"
+    state: absent
+
+- name: Clean installation logs
+  file:
+    path: "/tmp/{{ item }}"
+    state: absent
+  with_items: "{{ installation_logs }}"
+
+- name: Run dirinstall
+  command: anaconda --dirinstall {{ install_dir }} --kickstart {{ kickstart_dest }} {{ method }} --noninteractive
+  register: result
+
+- debug: msg={{ result }}
+
+- name: Update test.log
+  copy:
+    content: "{{ result.stdout }}"
+    dest: "{{ artifacts }}/test.{{ anaconda_logs_dir }}.out"
+
+- name: Create installation logs dir in artifacts
+  file:
+    path: "{{ artifacts }}/{{ anaconda_logs_dir }}"
+    state: directory
+
+- name: Copy installation logs to artifacts
+  copy:
+    remote_src: True
+    src: "/tmp/{{ item }}"
+    dest: "{{ artifacts }}/{{ anaconda_logs_dir }}/{{ item }}"
+  with_items: "{{ installation_logs }}"
+
+

@@ -1,0 +1,5 @@
+---
+
+install_dir: "/root/installdir"
+kickstart_dest: "/root/ks.dirinstall.cfg"
+
