@@ -1,0 +1,67 @@
+---
+
+- set_fact:
+    kickstart: "{{ kickstart_template | basename }}"
+
+- set_fact:
+    test_name_with_ks: "{{ test_name }}.{{ kickstart }}"
+
+- debug:
+    msg: "Running '{{ test_name }}' with kickstart '{{ kickstart }}'"
+
+- name: Copy installation kickstart
+  template:
+    src: "templates/kickstarts/{{ kickstart }}"
+    dest: "{{ kickstart_dest }}"
+    mode: 0755
+
+- name: Clean target directory
+  file:
+    path: "{{ install_dir }}/"
+    state: absent
+
+- name: Clean installation logs
+  file:
+    path: "/tmp/{{ item }}"
+    state: absent
+  with_items: "{{ installation_logs }}"
+
+- name: Run dirinstall
+  command: anaconda --dirinstall {{ install_dir }} --kickstart {{ kickstart_dest }} {{ method }} --noninteractive
+  register: result
+
+- debug:
+    msg: "{{ result }}"
+
+- set_fact:
+    result_str: "FAIL"
+
+- set_fact:
+    result_str: "PASS"
+  when: result.rc == 0
+
+- name: Update global test.log
+  lineinfile:
+    path: "{{ artifacts }}/test.log"
+    line: "{{ result_str }} {{ test_name_with_ks }}"
+    create: yes
+    insertafter: EOF
+
+- name: Create this test log
+  copy:
+    content: "{{ result.stdout }}"
+    dest: "{{ artifacts }}/{{ result_str }}_{{ test_name_with_ks }}.log"
+
+- name: Create installation logs dir in artifacts
+  file:
+    path: "{{ artifacts }}/{{ test_name_with_ks }}"
+    state: directory
+
+- name: Copy installation logs to artifacts
+  copy:
+    remote_src: True
+    src: "/tmp/{{ item }}"
+    dest: "{{ artifacts }}/{{ test_name_with_ks }}/{{ item }}"
+  with_items: "{{ installation_logs }}"
+
+
