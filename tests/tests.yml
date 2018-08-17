@@ -25,12 +25,12 @@
     - role: dirinstall
       vars:
         method: "--text"
-        anaconda_logs_dir: "dirinstall-text"
+        test_name: dirinstall-text
       tags:
-        - dirinstall-text
+        - "{{ test_name }}"
     - role: dirinstall
       vars:
-        method: '--vnc'
-        anaconda_logs_dir: "dirinstall-vnc"
+        method: "--vnc"
+        test_name: dirinstall-vnc
       tags:
-        - dirinstall-vnc
+        - "{{ test_name }}"
