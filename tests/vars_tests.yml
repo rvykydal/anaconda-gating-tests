@@ -10,3 +10,4 @@ installation_logs:
   - packaging.log
   - program.log
   - storage.log
+additional_repo_commands: []

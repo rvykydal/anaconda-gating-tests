@@ -1,4 +1,5 @@
 url --url={{ base_repo }}
+{{ "\n".join(additional_repo_commands) }}
 lang en_US.UTF-8
 keyboard --vckeymap=us --xlayouts='us'
 rootpw --plaintext redhat
