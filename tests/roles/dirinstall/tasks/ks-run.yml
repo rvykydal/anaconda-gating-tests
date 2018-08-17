@@ -27,7 +27,7 @@
   with_items: "{{ installation_logs }}"
 
 - name: Run dirinstall
-  command: anaconda --dirinstall {{ install_dir }} --kickstart {{ kickstart_dest }} {{ method }} --noninteractive
+  shell: anaconda --dirinstall {{ install_dir }} --kickstart {{ kickstart_dest }} {{ method }} --noninteractive 2>&1
   register: result
 
 - debug:
