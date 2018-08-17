@@ -16,9 +16,6 @@
       - program.log
       - storage.log
   roles:
-    - role: prepare-testing-system
-      tags:
-        - prepare-testing-system
     - role: prepare-env
       tags:
         - prepare-env
