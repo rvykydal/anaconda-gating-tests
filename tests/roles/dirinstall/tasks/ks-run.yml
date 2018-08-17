@@ -63,5 +63,6 @@
     src: "/tmp/{{ item }}"
     dest: "{{ artifacts }}/{{ test_name_with_ks }}/{{ item }}"
   with_items: "{{ installation_logs }}"
+  ignore_errors: True
 
 
