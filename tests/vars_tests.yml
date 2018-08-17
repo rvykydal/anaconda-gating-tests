@@ -1,0 +1,12 @@
+---
+# variables for tests.yml
+base_repo: http://download.englab.brq.redhat.com/pub/fedora/development-rawhide/Everything/x86_64/os/
+installation_logs:
+  - anaconda.log
+  - dbus.log
+  - dnf.librepo.log
+  - hawkey.log
+  - ifcfg.log
+  - packaging.log
+  - program.log
+  - storage.log

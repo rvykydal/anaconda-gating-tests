@@ -1,4 +1,4 @@
-url --url={{ installation_repo }}
+url --url={{ base_repo }}
 lang en_US.UTF-8
 keyboard --vckeymap=us --xlayouts='us'
 rootpw --plaintext redhat

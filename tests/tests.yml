@@ -4,17 +4,9 @@
   become: true
   tags:
     - classic
-  vars:
-    installation_repo: http://download.englab.brq.redhat.com/pub/fedora/development-rawhide/Everything/x86_64/os/
-    installation_logs:
-      - anaconda.log
-      - dbus.log
-      - dnf.librepo.log
-      - hawkey.log
-      - ifcfg.log
-      - packaging.log
-      - program.log
-      - storage.log
+  vars_files:
+    - vars_tests.yml
+
   roles:
     - role: prepare-env
       tags:
@@ -24,10 +16,10 @@
         method: "--text"
         test_name: dirinstall-text
       tags:
-        - "{{ test_name }}"
+        - dirinstall-text
     - role: dirinstall
       vars:
         method: "--vnc"
         test_name: dirinstall-vnc
       tags:
-        - "{{ test_name }}"
+        - dirinstall-vnc
