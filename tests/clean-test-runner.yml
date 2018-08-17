@@ -1,0 +1,11 @@
+---
+# get artifacts from test-runner
+- hosts: gating_test_runner
+  become: true
+  vars_files:
+    # Needed to get artifacts location on test runner
+    - roles/prepare-test-runner/vars/main.yml
+
+  roles:
+    - role: clean-test-runner
+
