@@ -1,0 +1,11 @@
+---
+inventory_layout:
+  #inventory_file: "{% raw -%}{{ workspace }}/inventories/gating-test.inventory{%- endraw%}"
+  vars:
+    hostname: __IP__
+  hosts:
+    gating_test_runner:
+      count: 1
+      host_groups:
+        - gating_test_runner
+

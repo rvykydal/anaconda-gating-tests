@@ -1,0 +1,4 @@
+---
+gating-test:
+  topology: gating-test.yml
+  layout: gating-test.yml
