@@ -1,0 +1,25 @@
+---
+# Check if remote_user is reachable by ansible and set ansible.cfg
+# if so.
+
+- hosts: gating_test_runner
+  become: True
+  gather_facts: False
+  remote_user: "{{ remote_user }}"
+
+  tasks:
+  - name: Try a raw command as a check
+    raw: echo "CHECK OK"
+    register: result
+
+  - debug:
+      msg: "{{ result }}"
+
+  - name: Set ansible.cfg remote user to "{{ remote_user }}"
+    become: no
+    local_action:
+      module: lineinfile
+      path: ./ansible.cfg
+      regexp: ^remote_user
+      line: "remote_user = {{ remote_user }}"
+    when: result.stdout_lines[0] == "CHECK OK"
