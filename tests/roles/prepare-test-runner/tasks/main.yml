@@ -1,4 +1,11 @@
 ---
+
+- name: Add repositories
+  template:
+    src: repo.j2
+    dest: "/etc/yum.repos.d/{{ test_runner_repos[item]['name']}}.repo"
+  with_items: "{{ test_runner_repos }}"
+
 - name: Install testing system packages
   dnf:
     name:

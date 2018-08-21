@@ -1,0 +1,8 @@
+---
+
+# Additional repos added to test runner, eg repo with builds to be tested
+#test_runner_repos:
+#  latest-build:
+#    name: latest-build
+#    source: "baseurl=http://example.com/x86_64/os/"
+test_runner_repos: []
