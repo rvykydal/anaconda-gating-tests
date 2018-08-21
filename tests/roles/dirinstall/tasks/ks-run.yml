@@ -57,6 +57,12 @@
     path: "{{ artifacts }}/{{ test_name_with_ks }}"
     state: directory
 
+- name: Copy input kickstart to artifacts
+  copy:
+    remote_src: True
+    src: "{{ kickstart_dest }}"
+    dest: "{{ artifacts }}/{{ test_name_with_ks }}/{{ kickstart_dest | basename }}"
+
 - name: Copy installation logs to artifacts
   copy:
     remote_src: True
