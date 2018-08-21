@@ -5,6 +5,16 @@
 
   gather_facts: False
   pre_tasks:
+    - name: Add bootstrap repo for packages required by ansible
+      vars:
+        repo_content: |
+          [bootstrap]
+          name=bootstrap
+          {{ bootstrap_repo_for_ansible.source }}
+          enabled=1
+          gpgcheck=0
+      raw: echo "{{ repo_content }}" > /etc/yum.repos.d/bootstrap.repo
+      when: bootstrap_repo_for_ansible is defined
     - name: Install python for Ansible
       raw: rpm -q python2 > /dev/null || dnf -y install python2
       register: output

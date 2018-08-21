@@ -6,3 +6,7 @@
 #    name: latest-build
 #    source: "baseurl=http://example.com/x86_64/os/"
 test_runner_repos: []
+
+# Bootstrap repo required to install packages for ansible
+#bootstrap_repo_for_ansible:
+#  source: "baseurl=http://example.com/repo/x86_64/os/"
