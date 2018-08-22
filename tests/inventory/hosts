@@ -1,0 +1,3 @@
+[gating_test_runner]
+[gating_test_runner:vars]
+ansible_python_interpreter=/usr/bin/python3
