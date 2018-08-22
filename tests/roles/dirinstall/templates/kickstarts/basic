@@ -1,4 +1,5 @@
-url --url={{ base_repo }}
+{{ base_repo_command }}
+{{ "\n".join(repo_commands) }}
 {{ "\n".join(additional_repo_commands) }}
 lang en_US.UTF-8
 keyboard --vckeymap=us --xlayouts='us'

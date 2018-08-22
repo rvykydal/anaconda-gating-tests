@@ -1,0 +1,41 @@
+---
+
+### Base repository
+
+# Base repository command for kickstart
+
+#base_repo_command: "url --url=http://download.englab.brq.redhat.com/pub/fedora/development-rawhide/Everything/x86_64/os/"
+
+# If base_repo_command is not defined, look for base repo url
+# in [base_repo_from_runner.repo] repository of
+# /etc/yum.repos.d/base_repo_from_runner.file on test runner
+
+base_repo_from_runner:
+  file: fedora.repo
+  repo: fedora
+
+
+### Additional repositories
+
+# Additional repo commands for kickstart:
+# - undefine to allow detecting of repos from test runner by
+#   repos_from_runner variable
+# - set to [] for no additional repositories
+
+#repo_commands: []
+#repo_commands:
+#  - "repo --baseurl=http://download.englab.brq.redhat.com/pub/fedora/development-rawhide/Everything/x86_64/os/"
+
+# If repo_commands is not defined, look for additinal repositories
+# in [repo] repository of /etc/yum.repos.d/file of test runner.
+# Multiple repositories can be defined here.
+
+#repos_from_runner:
+#  - file: fedora.repo
+#    repo: fedora
+
+
+# Additional repo commands to be used in any case,
+# ie even in case additional repos are detected by repos_from_runner
+
+additional_repo_commands: []

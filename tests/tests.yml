@@ -11,6 +11,7 @@
     - role: prepare-env
       tags:
         - prepare-env
+    - role: installation-repos
     - role: dirinstall
       vars:
         method: "--text"
