@@ -19,7 +19,7 @@
     become: no
     local_action:
       module: lineinfile
-      path: ./ansible.cfg
+      path: ./remote_config/ansible.cfg
       regexp: ^remote_user
       line: "remote_user = {{ remote_user }}"
     when: result.stdout_lines[0] == "CHECK OK"
