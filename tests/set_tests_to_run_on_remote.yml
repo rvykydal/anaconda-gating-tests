@@ -1,0 +1,17 @@
+---
+# Replace hosts in test playbooks to run on remote host instead of localhost
+
+- hosts: localhost
+  become: False
+  gather_facts: False
+
+  tasks:
+  - name: Replace hosts in tests*.yml playbooks
+    lineinfile:
+      path: "{{ item }}"
+      regexp: "- hosts: localhost\\S*"
+      line: "- hosts: gating_test_runner"
+      backrefs: yes
+    with_fileglob:
+      - tests*.yml
+

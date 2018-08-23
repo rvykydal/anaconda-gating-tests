@@ -1,6 +1,6 @@
 ---
 # test anaconda
-- hosts: gating_test_runner
+- hosts: localhost
   become: true
   tags:
     - classic
