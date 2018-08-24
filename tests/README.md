@@ -1,6 +1,6 @@
 [Anaconda](https://github.com/rhinstaller/anaconda) installer gating tests.
 
-Additionally to the tests (`tests*.yml`) contains also playbooks for runnning the tests from localhost on a remote test runner. The runner can be provisioned by `linchpin`. See [run_gating_tests_in_cloud.sh](run_gating_tests_in_cloud.sh) script as an example of the playbooks usage.
+Additionally to the tests (`tests*.yml`) contains also playbooks for runnning the tests from localhost on a remote test runner. The runner can be provisioned by `linchpin`. See [run_tests_remotely.sh](run_tests_remotely.sh) script as an example of the playbooks usage.
 
 Running the tests remotely
 --------------------------
@@ -12,7 +12,7 @@ The remote test runner can be provided in any way. To be used by the playbooks:
 * It has to allow ssh access as a remote user which is allowed to  become root, using the ssh key configured by `private_key_file` in [ansible config](remote_config/ansible.cfg). By default the `remote_user` for running the tests is `root`.
 * Test runner host name / IP should be configured for the playbooks in `gating_test_runner` group of [remote_config/inventory](remote_config/inventory).
 
-The runner can be provisioned by linchpin as in the [script](run_gating_tests_in_cloud.sh):
+The runner can be provisioned by linchpin as in the [script](run_tests_remotely.sh):
 
 * The cloud credentials need to be configured in the file and profile reffered by `credentials` variable of [topology](linchpin/topologies/gating-test.yml). So the credentials file [`clouds.yml`](linchpin/credentials/clouds.yml) should contain profile `ci-rhos`. The file can be placed to `~/.config/linchpin` directory or the directory containing the file can be set by `linchpin` `--creds-path` option.
 * The ssh key is set by `keypair` value of linchpin [topology](linchpin/topologies/gating-test.yml) file. It should correspond to the key defined in [ansible config](remote_config/ansible.cfg). The [topology](linchpin/topologies/gating-test.yml) file also defines image to be used for test runner.
@@ -35,13 +35,13 @@ Normally the testing system runs all the `tests*.yml` playbooks.
 
 **WARNING:**
 The test playbooks are run on `localhost` (test runner provided by the testing system). They change the test runner environment (eg install packages) so most probably you don't want to run them as they are - on your local host.
-The [script](run_gating_tests_in_cloud.sh) updates `hosts` value of the test playbooks to use remote host from [`gating_test_runner`](remote_config/inventory/hosts) group as test runner (using a [playbook](set_tests_to_run_on_remote.yml)).
+The [script](run_tests_remotely.sh) updates `hosts` value of the test playbooks to use remote host from [`gating_test_runner`](remote_config/inventory/hosts) group as test runner (using a [playbook](set_tests_to_run_on_remote.yml)).
 If you want to run the tests playbooks separately make sure the `hosts` variable in the test playbook is set to remote test runner (eg. `gating_test_runner`).
 
 
 
 
-The test playbooks need [`artifacts`](roles/prepare-test-runner/vars/main.yml) variable supplied as can be seen in the [script](run_gating_tests_in_cloud.sh). (Normally testing system takes care of this.)
+The test playbooks need [`artifacts`](roles/prepare-test-runner/vars/main.yml) variable supplied as can be seen in the [script](run_tests_remotely.sh). (Normally testing system takes care of this.)
 
 #### Installation repositories:
 
@@ -54,4 +54,4 @@ There is a text and a vnc variant of dirinstall test. Both will run all the kick
 
 ### The results
 
-The results and logs are fetched from remote host by another [playbook](clean-test-runner.yml) which is using [`local_artifacts`](roles/clean-test-runner/defaults/main.yml) variable to set local host target directory. This value can be passed also to the [script](run_gating_tests_in_cloud.sh) with `-a` option.
+The results and logs are fetched from remote host by another [playbook](clean-test-runner.yml) which is using [`local_artifacts`](roles/clean-test-runner/defaults/main.yml) variable to set local host target directory. This value can be passed also to the [script](run_tests_remotely.sh) with `-a` option.
