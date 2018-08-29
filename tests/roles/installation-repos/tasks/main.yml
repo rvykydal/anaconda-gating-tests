@@ -1,82 +1,87 @@
 ---
 
+### Set up local facts from system repositories
+
+- name: Create facts directory for repository custom facts
+  file:
+    state: directory
+    recurse: yes
+    path: /etc/ansible/facts.d
+
+- name: Install base repository facts
+  copy:
+    remote_src: yes
+    src: "/etc/yum.repos.d/{{ base_repo_from_runner.file }}"
+    dest: "/etc/ansible/facts.d/{{ base_repo_from_runner.file}}.fact"
+  when: base_repo_command is not defined and base_repo_from_runner is defined
+
+- name: Install additional repositories facts
+  copy:
+    remote_src: yes
+    src: "/etc/yum.repos.d/{{ item.file }}"
+    dest: "/etc/ansible/facts.d/{{ item.file}}.fact"
+  with_items: "{{ repos_from_runner }}"
+  when: repo_commands is not defined and repos_from_runner is defined
+
+- name: Setup repository facts
+  setup:
+    filter: ansible_local
+
 ### Base repository
-
-- name: Look for system metalink base repository
-  set_fact:
-    base_repo_metalink: "{{ lookup('ini', 'metalink section={{ base_repo_from_runner.repo }} file=/etc/yum.repos.d/{{ base_repo_from_runner.file }}', errors='warn') }}"
-  ignore_errors: true
-  when: base_repo_command is not defined and base_repo_from_runner is defined
-
-- name: Look for system mirrorlist base repository
-  set_fact:
-    base_repo_mirrorlist: "{{ lookup('ini', 'mirrorlist section={{ base_repo_from_runner.repo }} file=/etc/yum.repos.d/{{ base_repo_from_runner.file }}', errors='warn') }}"
-  ignore_errors: true
-  when: base_repo_command is not defined and base_repo_from_runner is defined
-
-- name: Look for system url base repository
-  set_fact:
-    base_repo_url: "{{ lookup('ini', 'baseurl section={{ base_repo_from_runner.repo }} file=/etc/yum.repos.d/{{ base_repo_from_runner.file }}', errors='warn') }}"
-  ignore_errors: true
-  when: base_repo_command is not defined and base_repo_from_runner is defined
 
 - name: Set base installation repository from system base metalink repository
   set_fact:
-    base_repo_command: "url --metalink={{ base_repo_metalink }}"
-  when: base_repo_metalink is defined and base_repo_metalink != []
+    base_repo_command: "url --metalink={{ ansible_local[base_repo_from_runner.file][base_repo_from_runner.repo]['metalink'] }}"
+  when: ansible_local[base_repo_from_runner.file][base_repo_from_runner.repo]['metalink'] is defined
 
 - name: Set base installation repository from system base mirrorlist repository
   set_fact:
-    base_repo_command: "url --mirrorlist={{ base_repo_mirrorlist }}"
-  when: base_repo_mirrorlist is defined and base_repo_mirrorlist != []
+    base_repo_command: "url --mirrorlist={{ ansible_local[base_repo_from_runner.file][base_repo_from_runner.repo]['mirrorlist'] }}"
+  when: ansible_local[base_repo_from_runner.file][base_repo_from_runner.repo]['mirrorlist'] is defined
 
 - name: Set base installation repository from system base url repository
   set_fact:
-    base_repo_command: "url --url={{ base_repo_url }}"
-  when: base_repo_url is defined and base_repo_url != []
+    base_repo_command: "url --url={{ ansible_local[base_repo_from_runner.file][base_repo_from_runner.repo]['baseurl'] }}"
+  when: ansible_local[base_repo_from_runner.file][base_repo_from_runner.repo]['baseurl'] is defined
 
 ### Additional repositories
 
 - name: Look for system metalink repositories
   set_fact:
-    repos_metalink: "{{ repos_metalink | default([]) + [ 'repo --name=' + item.repo + ' --metalink=' +  lookup('ini', 'metalink section={{ item.repo }} file=/etc/yum.repos.d/{{ item.file }}') | join('') ] }}"
-  ignore_errors: true
+    repos_metalink: "{{ repos_metalink | default([]) + [ 'repo --name=' + item.repo + ' --metalink=' + ansible_local[item.file][item.repo]['metalink'] ] }}"
+    #ignore_errors: true
   with_items: "{{ repos_from_runner }}"
-  when: repo_commands is not defined and repos_from_runner is defined
+  when: repo_commands is not defined and ansible_local[item.file][item.repo]['metalink'] is defined
 
 - name: Look for system mirrorlist repositories
   set_fact:
-    repos_mirrorlist: "{{ repos_mirrorlist | default([]) + [ 'repo --name=' + item.repo + ' --mirrorlist=' +  lookup('ini', 'mirrorlist section={{ item.repo }} file=/etc/yum.repos.d/{{ item.file }}') | join('') ] }}"
-  ignore_errors: true
+    repos_mirrorlist: "{{ repos_mirrorlist | default([]) + [ 'repo --name=' + item.repo + ' --mirrorlist=' + ansible_local[item.file][item.repo]['mirrorlist'] ] }}"
+    #ignore_errors: true
   with_items: "{{ repos_from_runner }}"
-  when: repo_commands is not defined and repos_from_runner is defined
+  when: repo_commands is not defined and ansible_local[item.file][item.repo]['mirrorlist'] is defined
 
-- name: Look for system url base repositories
+- name: Look for system baseurl repositories
   set_fact:
-    repos_url: "{{ repos_url | default([]) + [ 'repo --name=' + item.repo + ' --baseurl=' +  lookup('ini', 'baseurl section={{ item.repo }} file=/etc/yum.repos.d/{{ item.file }}') | join('') ] }}"
-  ignore_errors: true
+    repos_baseurl: "{{ repos_baseurl | default([]) + [ 'repo --name=' + item.repo + ' --baseurl=' + ansible_local[item.file][item.repo]['baseurl'] ] }}"
+    #ignore_errors: true
   with_items: "{{ repos_from_runner }}"
-  when: repo_commands is not defined and repos_from_runner is defined
+  when: repo_commands is not defined and ansible_local[item.file][item.repo]['baseurl'] is defined
+
 
 - name: Set additional metalink installation repositories from system
   set_fact:
     repo_commands: "{{ repo_commands | default([]) + [ item ] }}"
   with_items: "{{ repos_metalink }}"
-  when: repos_metalink is defined and not item | regex_search("=$")
+  when: repos_metalink is defined
 
 - name: Set additional mirrorlist installation repositories from system
   set_fact:
     repo_commands: "{{ repo_commands | default([]) + [ item ] }}"
   with_items: "{{ repos_mirrorlist }}"
-  when: repos_mirrorlist is defined and not item | regex_search("=$")
+  when: repos_mirrorlist is defined
 
-- name: Set additional url installation repositories from system
+- name: Set additional baseurl installation repositories from system
   set_fact:
     repo_commands: "{{ repo_commands | default([]) + [ item ] }}"
-  with_items: "{{ repos_url }}"
-  when: repos_url is defined and not item | regex_search("=$")
-
-- name: Make sure list of repo_commands is defined for kickstart template
-  set_fact:
-    repo_commands: []
-  when: repo_commands is not defined
+  with_items: "{{ repos_baseurl }}"
+  when: repos_baseurl is defined
