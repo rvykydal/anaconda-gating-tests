@@ -1,14 +1,5 @@
 ---
 
-- name: Install testing system packages
-  dnf:
-    name:
-      - ansible
-      - python2-dnf
-      - libselinux-python
-      - standard-test-roles
-    state: latest
-
 - name: Add repositories
   template:
     src: repo.j2

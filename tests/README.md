@@ -25,8 +25,7 @@ The runner can be provisioned by linchpin as in the [script](run_tests_remotely.
 
 Test runner environment is prepared by [`prepare-test-runner.yml`](prepare-test-runner.yml) playbook:
 
-* It is possible to add repositories to the runner by defining [`test_runner_repos`](roles/prepare-test-runner/defaults/main.yml) variable. It can be useful for example for adding a repository with scratch build to be tested.
-* Packages required to run the tests are installed.
+* It is possible to add repositories to the runner by defining [`test_runner_repos`](roles/prepare-test-runner/defaults/main.yml) variable. It can be useful for example for adding a repository with scratch build to be tested or adding repositories for test dependencies missing on remote runner.
 * Empty directory for storing test artifacts is created on test runner based on the [`artifacts`](roles/prepare-test-runner/vars/main.yml) variable.
 
 ### Test playbooks configuration
