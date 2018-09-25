@@ -22,7 +22,7 @@ base_repo_from_runner:
 #   repos_from_runner variable
 # - set to [] for no additional repositories
 
-#repo_commands: []
+repo_commands: []
 #repo_commands:
 #  - "repo --baseurl=http://download.englab.brq.redhat.com/pub/fedora/development-rawhide/Everything/x86_64/os/"
 
