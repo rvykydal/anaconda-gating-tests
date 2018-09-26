@@ -6,6 +6,11 @@
     state: latest
   when: method == "--vnc"
 
+- name: Turn off selinux
+  selinux:
+    policy: targeted
+    state: permissive
+
 - include_tasks: ks-run.yml
   with_fileglob:
     - templates/kickstarts/*

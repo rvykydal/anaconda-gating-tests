@@ -1,5 +1,7 @@
 [Anaconda](https://github.com/rhinstaller/anaconda) installer gating tests.
 
+**TODO:** The tests are not working with selinux turned on: [https://bugzilla.redhat.com/show_bug.cgi?id=1616214](https://bugzilla.redhat.com/show_bug.cgi?id=1616214). It is set to permissive in [`dirinstall role`](roles/dirinstall/tasks/main.yml).
+
 Additionally to the tests (`tests*.yml`) contains also playbooks for runnning the tests from localhost on a remote test runner. The runner can be provisioned by `linchpin`. See [run_tests_remotely.sh](run_tests_remotely.sh) script as an example of the playbooks usage.
 
 Running the tests remotely
