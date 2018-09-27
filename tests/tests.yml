@@ -24,3 +24,4 @@
         test_name: dirinstall-vnc
       tags:
         - dirinstall-vnc
+    - role: sync-artifacts
