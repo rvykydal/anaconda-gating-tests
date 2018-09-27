@@ -14,7 +14,7 @@ HELP_USAGE
 }
 
 CHECK_ONLY="no"
-ARTIFACTS_VAR=""
+ARTIFACTS="/tmp/artifacts"
 
 while getopts "ca:" opt; do
     case $opt in
@@ -24,7 +24,7 @@ while getopts "ca:" opt; do
             ;;
         a)
             # Set up directory for fetching artifacts
-            ARTIFACTS_VAR="local_artifacts=${OPTARG}"
+            ARTIFACTS="${OPTARG}"
             ;;
         *)
             echo "Usage:"
@@ -152,11 +152,9 @@ for USER in root fedora cloud-user; do
 done
 
 ### Prepare test runner
-ansible-playbook prepare-test-runner.yml
+ansible-playbook --extra-vars="artifacts=${ARTIFACTS}" prepare-test-runner.yml
 ### Run test on test runner (supply artifacts variable which is testing system's job)
-ansible-playbook --extra-vars="artifacts=./artifacts" tests.yml
-### Gather artifacts (into /tmp/artifacts by default)
-ansible-playbook --extra-vars="${ARTIFACTS_VAR}" clean-test-runner.yml
+ansible-playbook --extra-vars="artifacts=${ARTIFACTS}" tests.yml
 
 ### Destroy the test runner
 linchpin -v --workspace linchpin -p linchpin/PinFile -c linchpin/linchpin.conf destroy

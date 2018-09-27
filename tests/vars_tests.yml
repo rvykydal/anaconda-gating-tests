@@ -9,3 +9,4 @@ installation_logs:
   - packaging.log
   - program.log
   - storage.log
+local_artifacts: /tmp/artifacts

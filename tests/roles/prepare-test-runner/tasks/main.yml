@@ -6,12 +6,13 @@
     dest: "/etc/yum.repos.d/{{ test_runner_repos[item]['name']}}.repo"
   with_items: "{{ test_runner_repos }}"
 
-- name: Create empty artifacts directory
-  file:
-    path: "{{ artifacts }}/"
+- name: Create empty artifacts directory on local host
+  become: no
+  local_action:
+    module: file
+    path: "{{ artifacts }}"
     state: "{{ item }}"
     mode: 0755
   with_items:
     - absent
     - directory
-

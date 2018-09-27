@@ -29,6 +29,7 @@
 - name: Run dirinstall
   shell: anaconda --dirinstall {{ install_dir }} --kickstart {{ kickstart_dest }} {{ method }} --noninteractive 2>&1
   register: result
+  ignore_errors: True
 
 - debug:
     msg: "{{ result }}"
@@ -42,7 +43,7 @@
 
 - name: Update global test.log
   lineinfile:
-    path: "{{ artifacts }}/test.log"
+    path: "{{ local_artifacts }}/test.log"
     line: "{{ result_str }} {{ test_name_with_ks }}"
     create: yes
     insertafter: EOF
@@ -50,25 +51,23 @@
 - name: Create this test log
   copy:
     content: "{{ result.stdout }}"
-    dest: "{{ artifacts }}/{{ result_str }}_{{ test_name_with_ks }}.log"
+    dest: "{{ local_artifacts }}/{{ result_str }}_{{ test_name_with_ks }}.log"
 
 - name: Create installation logs dir in artifacts
   file:
-    path: "{{ artifacts }}/{{ test_name_with_ks }}"
+    path: "{{ local_artifacts }}/{{ test_name_with_ks }}"
     state: directory
 
 - name: Copy input kickstart to artifacts
   copy:
     remote_src: True
     src: "{{ kickstart_dest }}"
-    dest: "{{ artifacts }}/{{ test_name_with_ks }}/{{ kickstart_dest | basename }}"
+    dest: "{{ local_artifacts }}/{{ test_name_with_ks }}/{{ kickstart_dest | basename }}"
 
 - name: Copy installation logs to artifacts
   copy:
     remote_src: True
     src: "/tmp/{{ item }}"
-    dest: "{{ artifacts }}/{{ test_name_with_ks }}/{{ item }}"
+    dest: "{{ local_artifacts }}/{{ test_name_with_ks }}/{{ item }}"
   with_items: "{{ installation_logs }}"
   ignore_errors: True
-
-

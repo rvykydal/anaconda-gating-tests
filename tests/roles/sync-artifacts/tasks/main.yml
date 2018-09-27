@@ -1,0 +1,13 @@
+---
+
+- name: Make sure rsync required to fetch artifacts is installed
+  dnf:
+    name:
+      - rsync
+
+- name: Fetch artifacts
+  synchronize:
+    mode: pull
+    delete: yes
+    src: "{{ local_artifacts }}"
+    dest: "{{ artifacts }}"
