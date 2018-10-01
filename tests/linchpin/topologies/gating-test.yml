@@ -8,7 +8,8 @@ resource_groups:
           role: os_server
           flavor: m1.small
           #image: Fedora-Cloud-Base-28-1.1
-          image: Fedora-Cloud-Base-28-compose-latest
+          #image: Fedora-Cloud-Base-28-compose-latest
+          image: Fedora-Cloud-Base-29-nightly-latest
           count: 1
           keypair: kstests
           fip_pool: 10.8.240.0
