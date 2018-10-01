@@ -8,6 +8,14 @@
   remote_user: "{{ remote_user }}"
 
   tasks:
+
+  - name: Wait for connection after provisioning
+    wait_for_connection:
+      connection_timeout: 5
+      sleep: 1
+      delay: 3
+      timeout: 30
+
   - name: Try a raw command as a check
     raw: echo "CHECK OK"
     register: result
