@@ -31,7 +31,7 @@
   with_items: "{{ installation_logs }}"
 
 - name: Run dirinstall
-  shell: anaconda --dirinstall {{ install_dir }} --kickstart {{ kickstart_dest }} {{ method }} --noninteractive 2>&1
+  shell: timeout -k 10s 3600s anaconda --dirinstall {{ install_dir }} --kickstart {{ kickstart_dest }} {{ method }} --noninteractive 2>&1
   register: result
   ignore_errors: True
 
