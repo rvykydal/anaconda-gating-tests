@@ -35,11 +35,12 @@
     msg: "{{ result }}"
 
 - set_fact:
-    result_str: "FAIL"
+    result_str: "PASS"
 
 - set_fact:
-    result_str: "PASS"
-  when: result.rc == 0
+    result_str: "FAIL"
+    global_result: "FAIL"
+  when: result.rc != 0
 
 - name: Update global test.log
   lineinfile:

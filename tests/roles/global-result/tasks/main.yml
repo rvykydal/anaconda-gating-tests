@@ -1,0 +1,6 @@
+---
+# Make the test fail based on individual test failures
+
+- fail:
+    msg: "The test has failed."
+  when: global_result is defined and global_result == "FAIL"
