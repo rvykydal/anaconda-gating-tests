@@ -17,8 +17,12 @@
 
 - name: Clean target directory
   file:
-    path: "{{ install_dir }}/"
-    state: absent
+    path: "{{ install_dir }}"
+    state: "{{ item }}"
+    mode: 0755
+  with_items:
+    - absent
+    - directory
 
 - name: Clean installation logs
   file:
